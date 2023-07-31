@@ -14,17 +14,17 @@ PowerShellPannier: Hack your way through tasks with this go-to toolkit of essent
 To use the scripts in PowerShellPannier, follow these steps:
 
 1. Clone the repository to your local machine.
-```shell
+```ps
 git clone https://github.com/markkpettit/PowerShellPannier.git
 ```
 
 2. Navigate to the repository folder:
-```shell
+```ps
 cd PowerShellPannier
 ```
 
 3. Copy the scripts into one of your PowerShell module paths, for example:
-```shell
+```ps
 Copy-Item .\GetVolumeInfo.psm1 -Destination $env:USERPROFILE\Documents\WindowsPowerShell\Modules\GetVolumeInfo\GetVolumeInfo.psm1
 ```
 
@@ -35,7 +35,7 @@ After the scripts are copied to your PowerShell module path, you can import and 
 1. Start PowerShell.
 
 2. Import the desired module:
-```shell
+```ps
 Import-Module GetVolumeInfo
 ```
 
