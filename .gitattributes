@@ -33,11 +33,6 @@
 # Uncomment the following line to enable keyword expansion for specific file types.
 # Example: *.ps1 filter=expandKeywords
 
-# To set up the expandKeywords filter, run the following commands:
-#git config --local filter.expandKeywords.clean "sed 's/\$Date\$/'\"\$(date -R)\"'/' | sed 's/\$Author\$/'\"\$(git config user.name)\"'/'"
-#git config --local filter.expandKeywords.smudge "sed 's/\$Date\$/$Date$/' | sed 's/\$Author\$/$Author$/'"
-#git config --local filter.expandKeywords.required true
-
 #-----------------------------------------------------
 # Custom Settings for Specific Files
 #-----------------------------------------------------
@@ -47,6 +42,9 @@
 *.pdf binary
 *.png binary
 *.jpg binary
+*.ps1 text eol=crlf
+*.psd1 text eol=crlf
+*.psm1 text eol=crlf
 
 #-----------------------------------------------------
 # End of .gitattributes
