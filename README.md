@@ -1,6 +1,6 @@
 # PowerShellPannier
 
-PowerShellPannier: Hack your way through tasks with this go-to toolkit of essential, ready-to-use PowerShell scripts and tools. Always at your disposal for any task."
+PowerShellPannier: Hack your way through tasks with this go-to toolkit of essential, ready-to-use PowerShell scripts and tools. Always at your disposal for any task.
 
 ## Table of Contents
 
