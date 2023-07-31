@@ -1,0 +1,56 @@
+# .gitattributes - Git configuration for repository-wide settings
+
+#-----------------------------------------------------
+# Line Endings
+#-----------------------------------------------------
+
+# Uncomment the following line to treat all text files as having CRLF line endings on checkout.
+* text eol=crlf
+
+# Uncomment the following line to treat all text files as having LF line endings on checkout.
+#* text eol=lf
+
+# Alternatively, you can set line endings based on specific file patterns:
+#*.txt text eol=lf
+#*.sh text eol=lf
+#*.ps1 text eol=crlf
+
+#-----------------------------------------------------
+# Git LFS (Large File Storage)
+#-----------------------------------------------------
+
+# Uncomment the following line to use Git LFS for all files with the specified extensions.
+#*.zip filter=lfs diff=lfs merge=lfs -text
+
+# You can add more file extensions for Git LFS as needed:
+#*.tar.gz filter=lfs diff=lfs merge=lfs -text
+#*.mp4 filter=lfs diff=lfs merge=lfs -text
+
+#-----------------------------------------------------
+# Keyword Expansion
+#-----------------------------------------------------
+
+# Uncomment the following line to enable keyword expansion for specific file types.
+# Example: *.ps1 filter=expandKeywords
+
+# To set up the expandKeywords filter, run the following commands:
+#git config --local filter.expandKeywords.clean "sed 's/\$Date\$/'\"\$(date -R)\"'/' | sed 's/\$Author\$/'\"\$(git config user.name)\"'/'"
+#git config --local filter.expandKeywords.smudge "sed 's/\$Date\$/$Date$/' | sed 's/\$Author\$/$Author$/'"
+#git config --local filter.expandKeywords.required true
+
+#-----------------------------------------------------
+# Custom Settings for Specific Files
+#-----------------------------------------------------
+
+# Add custom settings for specific files here.
+# Example:
+*.pdf binary
+*.png binary
+*.jpg binary
+
+#-----------------------------------------------------
+# End of .gitattributes
+#-----------------------------------------------------
+
+# This is the end of the .gitattributes file.
+# Add any additional settings below this point.
