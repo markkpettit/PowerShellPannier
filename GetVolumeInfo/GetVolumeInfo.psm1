@@ -33,56 +33,58 @@ This command retrieves information for volumes and displays sizes in a human-rea
 
 #>
 
-param (
-    [Parameter(Position=0)]
-    [int]$MinimumSize = 1000000,
+function GetVolumeInfo {
+    param (
+        [Parameter(Position=0)]
+        [int]$MinimumSize = 1000000,
 
-    [Parameter(Position=1)]
-    [switch]$NoSizeFilter,
+        [Parameter(Position=1)]
+        [switch]$NoSizeFilter,
 
-    [Parameter(Position=2)]
-    [switch]$HumanReadable
-)
-
-function ConvertTo-HumanReadable {
-    param(
-        [Parameter(Position=0, Mandatory=$true)]
-        [double]$SizeInBytes
+        [Parameter(Position=2)]
+        [switch]$HumanReadable
     )
 
-    if ($SizeInBytes -gt 1GiB) {
-        return "{0:N2} GiB" -f ($SizeInBytes / 1GiB)
-    } elseif ($SizeInBytes -gt 1MiB) {
-        return "{0:N2} MiB" -f ($SizeInBytes / 1MiB)
-    } elseif ($SizeInBytes -gt 1KiB) {
-        return "{0:N2} KiB" -f ($SizeInBytes / 1KiB)
-    } else {
-        return "{0} Bytes" -f $SizeInBytes
+    function ConvertTo-HumanReadable {
+        param(
+            [Parameter(Position=0, Mandatory=$true)]
+            [double]$SizeInBytes
+        )
+
+        if ($SizeInBytes -gt ([math]::Pow(2, 30))) { # 2**30 is 1 GiB
+            return "{0:N2} GiB" -f ($SizeInBytes / ([math]::Pow(2, 30)))
+        } elseif ($SizeInBytes -gt ([math]::Pow(2, 20))) { # 2**20 is 1 MiB
+            return "{0:N2} MiB" -f ($SizeInBytes / ([math]::Pow(2, 20)))
+        } elseif ($SizeInBytes -gt ([math]::Pow(2, 10))) { # 2**10 is 1 KiB
+            return "{0:N2} KiB" -f ($SizeInBytes / ([math]::Pow(2, 10)))
+        } else {
+            return "{0} Bytes" -f $SizeInBytes
+        }
     }
+
+    Get-WmiObject Win32_Volume | ForEach-Object {
+        $Label = $_.Label
+        $Name = $_.Name
+        $Size = $_.Capacity
+        $FreeSpace = $_.FreeSpace
+        $PercentFull = "{0:N2}" -f (($Size - $FreeSpace) / $Size * 100)
+
+        if ($HumanReadable) {
+            $Size = ConvertTo-HumanReadable $Size
+            $FreeSpace = ConvertTo-HumanReadable $FreeSpace
+        } else {
+            $Size = ($Size / ([math]::Pow(2, 10))).ToString("N0")
+            $FreeSpace = ($FreeSpace / ([math]::Pow(2, 10))).ToString("N0")
+        }
+
+        New-Object PSObject -Property @{
+            Label = $Label
+            Name = $Name
+            "Percent Full" = $PercentFull
+            "Free Space" = $FreeSpace
+            "Size" = $Size
+        }
+    } | Where-Object {
+        $NoSizeFilter -or $_.Size -ge $MinimumSize
+    } | Select-Object Label, Name, "Percent Full", "Free Space", "Size"
 }
-
-Get-WmiObject Win32_Volume | ForEach-Object {
-    $Label = $_.Label
-    $Name = $_.Name
-    $Size = $_.Capacity
-    $FreeSpace = $_.FreeSpace
-    $PercentFull = "{0:N2}" -f (($Size - $FreeSpace) / $Size * 100)
-
-    if ($HumanReadable) {
-        $Size = ConvertTo-HumanReadable $Size
-        $FreeSpace = ConvertTo-HumanReadable $FreeSpace
-    } else {
-        $Size = ($Size / 1KiB).ToString("N0")
-        $FreeSpace = ($FreeSpace / 1KiB).ToString("N0")
-    }
-
-    New-Object PSObject -Property @{
-        Label = $Label
-        Name = $Name
-        "Percent Full" = $PercentFull
-        "Free Space" = $FreeSpace
-        "Size" = $Size
-    }
-} | Where-Object {
-    $NoSizeFilter -or $_.Size -ge $MinimumSize
-} | Select-Object Label, Name, "Percent Full", "Free Space", "Size"
